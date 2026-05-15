@@ -37,11 +37,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of(
-                        "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
-                        "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002",
-                        frontendUrl, frontendUrl.replace("https://", "https://*.") + "/**"
-                    ));
+                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("*"));
                     corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                     corsConfiguration.setAllowCredentials(false);
@@ -88,11 +84,7 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins(
-                            "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
-                            "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002",
-                            frontendUrl
-                        )
+                        .allowedOriginPatterns("*")
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(false)
