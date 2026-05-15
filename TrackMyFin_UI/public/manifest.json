@@ -1,0 +1,27 @@
+{
+  "short_name": "TrackMyFin",
+  "name": "TrackMyFin - Personal Finance Tracker",
+  "description": "Track your income, expenses, and manage your personal finances with ease",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "android-chrome-192x192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "android-chrome-512x512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#3B82F6",
+  "background_color": "#ffffff",
+  "categories": ["finance", "productivity", "business"]
+}

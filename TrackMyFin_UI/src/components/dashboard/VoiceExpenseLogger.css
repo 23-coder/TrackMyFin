@@ -1,0 +1,179 @@
+.voice-primary-button,
+.voice-secondary-button {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.5rem 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+.voice-primary-button:hover,
+.voice-secondary-button:hover {
+  transform: translateY(-1px);
+}
+
+.voice-fab-root {
+  position: fixed !important;
+  right: max(1.1rem, env(safe-area-inset-right)) !important;
+  bottom: max(1.1rem, env(safe-area-inset-bottom)) !important;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.6rem;
+}
+
+.voice-fab-button {
+  width: 62px;
+  height: 62px;
+  border: none;
+  border-radius: 999px;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  cursor: pointer;
+  background: linear-gradient(140deg, #0f172a 0%, #1e3a8a 100%);
+  box-shadow: 0 16px 24px rgba(15, 23, 42, 0.32);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+}
+
+.voice-fab-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 20px 28px rgba(15, 23, 42, 0.36);
+}
+
+.voice-fab-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+}
+
+.voice-mic-listening {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.42);
+  animation: voice-pulse 1.5s infinite;
+}
+
+.voice-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  margin-bottom: 0;
+  border-radius: 10px;
+  padding: 0.52rem 0.7rem;
+  font-size: 0.84rem;
+  border: 1px solid transparent;
+  max-width: 300px;
+}
+
+.voice-alert-warning {
+  background: #fff7ed;
+  color: #9a3412;
+  border-color: #fed7aa;
+}
+
+.voice-alert-error {
+  background: #fef2f2;
+  color: #991b1b;
+  border-color: #fecaca;
+}
+
+.voice-alert-success {
+  background: #f0fdf4;
+  color: #166534;
+  border-color: #bbf7d0;
+}
+
+.voice-loading-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(15, 23, 42, 0.9);
+  color: #f8fafc;
+  border-radius: 999px;
+  padding: 0.45rem 0.72rem;
+  font-size: 0.8rem;
+  border: 1px solid rgba(148, 163, 184, 0.3);
+  max-width: 300px;
+}
+
+.voice-fab-confirmation-card {
+  width: min(88vw, 360px);
+  border-radius: 16px;
+  border: 1px solid #c7d2fe;
+  background: linear-gradient(180deg, #f8fbff 0%, #edf3ff 100%);
+  box-shadow: 0 16px 28px rgba(15, 23, 42, 0.18);
+  padding: 0.82rem;
+}
+
+.voice-fab-confirmation-card p {
+  margin: 0;
+  color: #1e3a8a;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.voice-fab-confirmation-actions {
+  margin-top: 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.voice-fab-small-note {
+  margin-top: 0.5rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
+  color: #4c5d89 !important;
+}
+
+.voice-fab-status-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.45rem;
+}
+
+.voice-secondary-button {
+  background: #ffffff;
+  color: #334155;
+  border-color: #d3dcec;
+}
+
+.voice-primary-button {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  color: #ffffff;
+  box-shadow: 0 8px 16px rgba(22, 163, 74, 0.26);
+}
+
+@keyframes voice-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0.42);
+  }
+  70% {
+    box-shadow: 0 0 0 14px rgba(220, 38, 38, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(220, 38, 38, 0);
+  }
+}
+
+@media (max-width: 768px) {
+  .voice-fab-root {
+    right: max(0.9rem, env(safe-area-inset-right)) !important;
+    bottom: max(0.9rem, env(safe-area-inset-bottom)) !important;
+  }
+
+  .voice-fab-button {
+    width: 58px;
+    height: 58px;
+  }
+
+  .voice-fab-confirmation-card {
+    width: min(92vw, 330px);
+  }
+}

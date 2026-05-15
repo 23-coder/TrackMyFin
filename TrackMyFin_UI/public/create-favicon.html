@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create TrackMyFin Favicon</title>
+    <style>
+        body { margin: 20px; font-family: Arial, sans-serif; }
+        canvas { border: 1px solid #ccc; margin: 10px; }
+        .download-btn { 
+            background: #3b82f6; 
+            color: white; 
+            padding: 8px 16px; 
+            border: none; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            margin: 5px;
+        }
+        .download-btn:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+    <h2>TrackMyFin Favicon Generator</h2>
+    <p>Click the buttons to download favicon files:</p>
+    
+    <div>
+        <h3>32x32 Favicon</h3>
+        <canvas id="favicon32" width="32" height="32"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadFavicon('favicon32', 'favicon-32x32.png')">Download 32x32</button>
+        <button class="download-btn" onclick="downloadFavicon('favicon32', 'favicon.png')">Download as favicon.png</button>
+    </div>
+    
+    <div>
+        <h3>16x16 Favicon</h3>
+        <canvas id="favicon16" width="16" height="16"></canvas>
+        <br>
+        <button class="download-btn" onclick="downloadFavicon('favicon16', 'favicon-16x16.png')">Download 16x16</button>
+    </div>
+
+    <script>
+        function drawTrackMyFinFavicon(ctx, size) {
+            // Clear with white background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, size, size);
+            
+            const centerX = size / 2;
+            const centerY = size / 2;
+            const radius = Math.min(size * 0.35, 14);
+            
+            // Create gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#2563EB');
+            gradient.addColorStop(0.3, '#3B82F6');
+            gradient.addColorStop(0.7, '#10B981');
+            gradient.addColorStop(1, '#059669');
+            
+            // Draw main circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = gradient;
+            ctx.fill();
+            
+            // Draw rupee symbol
+            ctx.fillStyle = '#ffffff';
+            ctx.font = `bold ${Math.max(size * 0.4, 8)}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('₹', centerX, centerY);
+            
+            // Add small decorative elements if size allows
+            if (size >= 24) {
+                ctx.strokeStyle = '#ffffff';
+                ctx.lineWidth = Math.max(1, size / 32);
+                
+                // Top right arrow
+                const arrowSize = size * 0.08;
+                const arrowX = centerX + radius * 0.6;
+                const arrowY = centerY - radius * 0.6;
+                
+                ctx.beginPath();
+                ctx.moveTo(arrowX - arrowSize, arrowY);
+                ctx.lineTo(arrowX, arrowY - arrowSize);
+                ctx.lineTo(arrowX, arrowY);
+                ctx.moveTo(arrowX, arrowY - arrowSize);
+                ctx.lineTo(arrowX - arrowSize, arrowY - arrowSize);
+                ctx.stroke();
+            }
+        }
+        
+        function generateFavicon(canvasId, size) {
+            const canvas = document.getElementById(canvasId);
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, size, size);
+            drawTrackMyFinFavicon(ctx, size);
+        }
+        
+        function downloadFavicon(canvasId, filename) {
+            const canvas = document.getElementById(canvasId);
+            const link = document.createElement('a');
+            link.download = filename;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+        
+        // Generate favicons on page load
+        window.onload = function() {
+            generateFavicon('favicon32', 32);
+            generateFavicon('favicon16', 16);
+        };
+    </script>
+</body>
+</html>
