@@ -523,6 +523,69 @@ class ApiService {
     }
   }
 
+  // Budget API methods
+  async getBudgets(): Promise<any[]> {
+    return this.makeAuthenticatedRequest<any[]>('/budgets');
+  }
+
+  async createBudget(data: {
+    name: string;
+    amount: number;
+    period: string;
+    startDate: string;
+    endDate: string;
+    categoryId?: number;
+    active?: boolean;
+  }): Promise<any> {
+    const body: any = {
+      name: data.name,
+      amount: data.amount,
+      period: data.period,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      active: data.active ?? true,
+    };
+    if (data.categoryId) body.category = { id: data.categoryId };
+    return this.makeAuthenticatedRequest<any>('/budgets', {
+      method: 'POST',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async updateBudget(id: number, data: {
+    name: string;
+    amount: number;
+    period: string;
+    startDate: string;
+    endDate: string;
+    categoryId?: number;
+    active?: boolean;
+  }): Promise<any> {
+    const body: any = {
+      name: data.name,
+      amount: data.amount,
+      period: data.period,
+      startDate: data.startDate,
+      endDate: data.endDate,
+      active: data.active ?? true,
+    };
+    if (data.categoryId) body.category = { id: data.categoryId };
+    return this.makeAuthenticatedRequest<any>(`/budgets/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(body),
+    });
+  }
+
+  async deleteBudget(id: number): Promise<void> {
+    return this.makeAuthenticatedRequest<void>(`/budgets/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getSmartInsights(): Promise<{ insights: string[] }> {
+    return this.makeAuthenticatedRequest<{ insights: string[] }>('/dashboard/insights');
+  }
+
   // Bill extraction using Gemini AI
   async extractBillExpenses(billImage: string): Promise<BillExtractResponse> {
     try {

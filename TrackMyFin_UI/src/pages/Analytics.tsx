@@ -21,14 +21,15 @@ import {
   BarChart,
   Bar
 } from 'recharts';
-import { 
-  TrendingUp, 
-  TrendingDown, 
+import {
+  TrendingUp,
+  TrendingDown,
   PieChart as PieChartIcon,
   BarChart3,
   AlertCircle,
   Calendar,
-  DollarSign
+  DollarSign,
+  Lightbulb
 } from 'lucide-react';
 
 const CHART_COLORS = [
@@ -84,16 +85,18 @@ interface AnalyticsStats {
 
 const Analytics: React.FC = () => {
   useDocumentTitle('Analytics');
-  const { isAuthenticated, isLoading: authLoading } = useAuth();
-  const { 
-    transactions: dataTransactions, 
-    categories: dataCategories, 
-    salaries: dataSalaries 
+  const { isAuthenticated, isLoading: authLoading, currency } = useAuth();
+  const {
+    transactions: dataTransactions,
+    categories: dataCategories,
+    salaries: dataSalaries
   } = useData();
   const { isDark } = useTheme();
   const [loading, setLoading] = useState(true);
   const [expenseByCategory, setExpenseByCategory] = useState<ExpenseByCategory[]>([]);
   const [monthlyData, setMonthlyData] = useState<MonthlyData[]>([]);
+  const [insights, setInsights] = useState<string[]>([]);
+  const [insightsLoading, setInsightsLoading] = useState(false);
   const [stats, setStats] = useState<AnalyticsStats>({
     totalIncome: 0,
     totalExpenses: 0,
@@ -102,7 +105,7 @@ const Analytics: React.FC = () => {
     monthlyAvgExpenses: 0,
     expenseCategories: 0
   });
-  
+
   const { error } = useToast();
 
   const processExpenseByCategory = useCallback((transactions: Transaction[], categories: Category[]) => {
@@ -209,6 +212,18 @@ const Analytics: React.FC = () => {
     });
   }, [monthlyData.length]);
 
+  const loadInsights = useCallback(async () => {
+    try {
+      setInsightsLoading(true);
+      const data = await apiService.getSmartInsights();
+      setInsights(data.insights || []);
+    } catch {
+      setInsights([]);
+    } finally {
+      setInsightsLoading(false);
+    }
+  }, []);
+
   const loadAnalyticsData = useCallback(async () => {
     try {
       setLoading(true);
@@ -217,12 +232,10 @@ const Analytics: React.FC = () => {
         apiService.getCategories(),
         apiService.getSalaries()
       ]);
-      
-      // Process data for charts
+
       processExpenseByCategory(transactionsData, categoriesData);
       processMonthlyData(transactionsData, salariesData || []);
       calculateStats(transactionsData, salariesData || []);
-      
     } catch (err: any) {
       console.error('Failed to load analytics data:', err);
       error('Failed to load analytics data', err.message || 'Unknown error');
@@ -234,10 +247,11 @@ const Analytics: React.FC = () => {
   useEffect(() => {
     if (!authLoading && isAuthenticated) {
       loadAnalyticsData();
+      loadInsights();
     } else if (!authLoading && !isAuthenticated) {
       setLoading(false);
     }
-  }, [isAuthenticated, authLoading, loadAnalyticsData]);
+  }, [isAuthenticated, authLoading, loadAnalyticsData, loadInsights]);
 
   // Update local state when DataContext data changes
   useEffect(() => {
@@ -249,21 +263,21 @@ const Analytics: React.FC = () => {
     }
   }, [dataTransactions, dataCategories, dataSalaries, processExpenseByCategory, processMonthlyData, calculateStats]);
 
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(amount);
-  };
+  const activeCurrency = currency || 'USD';
 
-  const formatCurrencyDetailed = (amount: number) => {
-    return new Intl.NumberFormat('en-IN', {
+  const formatCurrency = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'INR'
+      currency: activeCurrency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
     }).format(amount);
-  };
+
+  const formatCurrencyDetailed = (amount: number) =>
+    new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: activeCurrency,
+    }).format(amount);
 
   // Custom tooltip for charts
   const CustomTooltip = ({ active, payload, label }: any) => {
@@ -560,6 +574,35 @@ const Analytics: React.FC = () => {
               <div className="h-96 flex items-center justify-center text-gray-500 dark:text-gray-400">
                 No data available for chart
               </div>
+            )}
+          </div>
+        </Card>
+
+        {/* Smart Insights */}
+        <Card className="mt-8">
+          <div className="p-6">
+            <div className="flex items-center mb-6">
+              <Lightbulb className="h-6 w-6 text-yellow-500 mr-3" />
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">Smart Insights</h2>
+            </div>
+            {insightsLoading ? (
+              <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-yellow-500" />
+                <span>Analysing your finances…</span>
+              </div>
+            ) : insights.length > 0 ? (
+              <ul className="space-y-3">
+                {insights.map((insight, i) => (
+                  <li key={i} className="flex items-start gap-3 p-3 bg-yellow-50 dark:bg-yellow-900/10 rounded-lg border border-yellow-100 dark:border-yellow-800">
+                    <span className="text-yellow-500 mt-0.5 flex-shrink-0">💡</span>
+                    <span className="text-sm text-gray-800 dark:text-gray-200">{insight}</span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-sm">
+                Add more transactions to unlock personalised insights.
+              </p>
             )}
           </div>
         </Card>

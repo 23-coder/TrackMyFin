@@ -18,6 +18,7 @@ const Dashboard = lazy(() => import('./pages/Dashboard'));
 const Categories = lazy(() => import('./pages/Categories'));
 const Transactions = lazy(() => import('./pages/Transactions'));
 const Analytics = lazy(() => import('./pages/Analytics'));
+const Budgets = lazy(() => import('./pages/Budgets'));
 const Profile = lazy(() => import('./pages/Profile'));
 
 const RouteFallback: React.FC = () => (
@@ -146,13 +147,21 @@ function App() {
                         </ProtectedRoute>
                       } 
                     />
-                    <Route 
-                      path="/analytics" 
+                    <Route
+                      path="/analytics"
                       element={
                         <ProtectedRoute>
                           <Analytics />
                         </ProtectedRoute>
-                      } 
+                      }
+                    />
+                    <Route
+                      path="/budgets"
+                      element={
+                        <ProtectedRoute>
+                          <Budgets />
+                        </ProtectedRoute>
+                      }
                     />
                     <Route 
                       path="/profile" 

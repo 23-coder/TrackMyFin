@@ -30,6 +30,7 @@ const NavBar: React.FC = () => {
     { name: 'Dashboard', path: '/dashboard' },
     { name: 'Transactions', path: '/transactions' },
     { name: 'Categories', path: '/categories' },
+    { name: 'Budgets', path: '/budgets' },
     { name: 'Analytics', path: '/analytics' },
   ] : [
     ...publicNavLinks,
