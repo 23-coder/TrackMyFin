@@ -91,3 +91,4 @@ $RECYCLE.BIN/
 !application.properties.template
 application-*.properties
 !application-dev.properties.template
+!application-prod.properties

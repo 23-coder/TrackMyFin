@@ -2,6 +2,7 @@ package com.financetracker.config;
 
 import com.financetracker.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,16 +29,23 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
+    @Value("${frontend.url:http://localhost:3000}")
+    private String frontendUrl;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     var corsConfiguration = new org.springframework.web.cors.CorsConfiguration();
-                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002"));
+                    corsConfiguration.setAllowedOriginPatterns(java.util.List.of(
+                        "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
+                        "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002",
+                        frontendUrl, frontendUrl.replace("https://", "https://*.") + "/**"
+                    ));
                     corsConfiguration.setAllowedMethods(java.util.List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                     corsConfiguration.setAllowedHeaders(java.util.List.of("*"));
                     corsConfiguration.setAllowCredentials(false);
-                    corsConfiguration.setMaxAge(3600L); // Cache preflight response for 1 hour
+                    corsConfiguration.setMaxAge(3600L);
                     return corsConfiguration;
                 }))
                 .csrf(AbstractHttpConfigurer::disable)
@@ -80,11 +88,15 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/api/**")
-                        .allowedOrigins("http://localhost:3000", "http://localhost:3001", "http://localhost:3002", "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002")
+                        .allowedOrigins(
+                            "http://localhost:3000", "http://localhost:3001", "http://localhost:3002",
+                            "http://127.0.0.1:3000", "http://127.0.0.1:3001", "http://127.0.0.1:3002",
+                            frontendUrl
+                        )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(false)
-                        .maxAge(3600); // Cache preflight response for 1 hour
+                        .maxAge(3600);
             }
         };
     }
